@@ -4,25 +4,72 @@
   "info": {
     "singularName": "product",
     "pluralName": "products",
-    "displayName": "Product"
+    "displayName": "Product",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "test": {
-      "type": "string"
+    "name": {
+      "type": "string",
+      "required": true
     },
-    "image": {
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ],
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "images": {
       "type": "media",
-      "multiple": true
+      "multiple": true,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "stock": {
+      "type": "integer"
+    },
+    "discountPrice": {
+      "type": "decimal"
+    },
+    "serviceAvailable": {
+      "type": "boolean",
+      "default": true
+    },
+    "isFeatured": {
+      "type": "boolean",
+      "default": false
+    },
+    "isHotDeals": {
+      "type": "boolean",
+      "default": false
+    },
+    "isPopular": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::category.category",
+      "inversedBy": "products"
+    },
+    "ratings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rating.rating",
+      "mappedBy": "product"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "products"
     }
   }
 }
