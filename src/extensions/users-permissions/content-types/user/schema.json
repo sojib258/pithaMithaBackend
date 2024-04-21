@@ -102,6 +102,18 @@
       "type": "biginteger",
       "required": true,
       "min": "11"
+    },
+    "address": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::address.address",
+      "mappedBy": "users_permissions_user"
+    },
+    "cart": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::cart.cart",
+      "mappedBy": "users_permissions_user"
     }
   }
 }
