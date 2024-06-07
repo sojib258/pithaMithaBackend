@@ -21,7 +21,8 @@
       "required": true
     },
     "price": {
-      "type": "decimal"
+      "type": "decimal",
+      "required": true
     },
     "images": {
       "type": "media",
@@ -71,11 +72,31 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "products"
     },
-    "cart": {
+    "weight": {
+      "type": "enumeration",
+      "enum": [
+        "kg",
+        "pcs",
+        "bundle"
+      ],
+      "required": true
+    },
+    "tags": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::cart.cart",
-      "inversedBy": "products"
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "mappedBy": "products"
+    },
+    "averageRating": {
+      "type": "decimal"
+    },
+    "shortDescription": {
+      "type": "string",
+      "required": true
+    },
+    "completedDays": {
+      "type": "string",
+      "required": true
     }
   }
 }

@@ -775,11 +775,6 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToMany',
       'api::blog.blog'
     >;
-    rating: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'oneToOne',
-      'api::rating.rating'
-    >;
     products: Attribute.Relation<
       'plugin::users-permissions.user',
       'oneToMany',
@@ -800,16 +795,22 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
         },
         string
       >;
-    address: Attribute.Relation<
+    addresses: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'oneToMany',
       'api::address.address'
     >;
-    cart: Attribute.Relation<
+    orders: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
-      'api::cart.cart'
+      'oneToMany',
+      'api::order.order'
     >;
+    ratings: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::rating.rating'
+    >;
+    averageResponseTime: Attribute.Integer;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -844,7 +845,7 @@ export interface ApiAddressAddress extends Schema.CollectionType {
       Attribute.Required &
       Attribute.SetMinMax<
         {
-          min: '11';
+          min: '10';
         },
         string
       >;
@@ -856,7 +857,7 @@ export interface ApiAddressAddress extends Schema.CollectionType {
     deliveryOption: Attribute.String;
     users_permissions_user: Attribute.Relation<
       'api::address.address',
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
     createdAt: Attribute.DateTime;
@@ -912,40 +913,6 @@ export interface ApiBlogBlog extends Schema.CollectionType {
   };
 }
 
-export interface ApiCartCart extends Schema.CollectionType {
-  collectionName: 'carts';
-  info: {
-    singularName: 'cart';
-    pluralName: 'carts';
-    displayName: 'Cart';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    users_permissions_user: Attribute.Relation<
-      'api::cart.cart',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    products: Attribute.Relation<
-      'api::cart.cart',
-      'oneToMany',
-      'api::product.product'
-    >;
-    quantity: Attribute.Integer;
-    price: Attribute.Decimal;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::cart.cart', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<'api::cart.cart', 'oneToOne', 'admin::user'> &
-      Attribute.Private;
-  };
-}
-
 export interface ApiCategoryCategory extends Schema.CollectionType {
   collectionName: 'categories';
   info: {
@@ -989,6 +956,47 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
   };
 }
 
+export interface ApiOrderOrder extends Schema.CollectionType {
+  collectionName: 'orders';
+  info: {
+    singularName: 'order';
+    pluralName: 'orders';
+    displayName: 'Order';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    totalPrice: Attribute.Decimal & Attribute.Required;
+    transactionId: Attribute.BigInteger & Attribute.Unique;
+    paid: Attribute.Boolean & Attribute.DefaultTo<false>;
+    rootStatus: Attribute.String;
+    sellers: Attribute.JSON & Attribute.Required;
+    address: Attribute.JSON & Attribute.Required;
+    users_permissions_user: Attribute.Relation<
+      'api::order.order',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::order.order',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiProductProduct extends Schema.CollectionType {
   collectionName: 'products';
   info: {
@@ -1003,7 +1011,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
   attributes: {
     name: Attribute.String & Attribute.Required;
     description: Attribute.Text & Attribute.Required;
-    price: Attribute.Decimal;
+    price: Attribute.Decimal & Attribute.Required;
     images: Attribute.Media & Attribute.Required;
     stock: Attribute.Integer;
     discountPrice: Attribute.Decimal;
@@ -1026,11 +1034,15 @@ export interface ApiProductProduct extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.user'
     >;
-    cart: Attribute.Relation<
+    weight: Attribute.Enumeration<['kg', 'pcs', 'bundle']> & Attribute.Required;
+    tags: Attribute.Relation<
       'api::product.product',
-      'manyToOne',
-      'api::cart.cart'
+      'manyToMany',
+      'api::tag.tag'
     >;
+    averageRating: Attribute.Decimal;
+    shortDescription: Attribute.String & Attribute.Required;
+    completedDays: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1061,7 +1073,7 @@ export interface ApiRatingRating extends Schema.CollectionType {
     draftAndPublish: true;
   };
   attributes: {
-    description: Attribute.Text & Attribute.Required;
+    comment: Attribute.Text & Attribute.Required;
     product: Attribute.Relation<
       'api::rating.rating',
       'manyToOne',
@@ -1079,10 +1091,9 @@ export interface ApiRatingRating extends Schema.CollectionType {
     image: Attribute.Media;
     users_permissions_user: Attribute.Relation<
       'api::rating.rating',
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
-    title: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1097,6 +1108,33 @@ export interface ApiRatingRating extends Schema.CollectionType {
       'oneToOne',
       'admin::user'
     > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiTagTag extends Schema.CollectionType {
+  collectionName: 'tags';
+  info: {
+    singularName: 'tag';
+    pluralName: 'tags';
+    displayName: 'Tag';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required;
+    products: Attribute.Relation<
+      'api::tag.tag',
+      'manyToMany',
+      'api::product.product'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::tag.tag', 'oneToOne', 'admin::user'> &
       Attribute.Private;
   };
 }
@@ -1121,10 +1159,11 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'api::address.address': ApiAddressAddress;
       'api::blog.blog': ApiBlogBlog;
-      'api::cart.cart': ApiCartCart;
       'api::category.category': ApiCategoryCategory;
+      'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::rating.rating': ApiRatingRating;
+      'api::tag.tag': ApiTagTag;
     }
   }
 }

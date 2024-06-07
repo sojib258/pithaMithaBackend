@@ -19,7 +19,7 @@
     "number": {
       "type": "biginteger",
       "required": true,
-      "min": "11"
+      "min": "10"
     },
     "division": {
       "type": "string",
@@ -45,9 +45,9 @@
     },
     "users_permissions_user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "address"
+      "inversedBy": "addresses"
     }
   }
 }

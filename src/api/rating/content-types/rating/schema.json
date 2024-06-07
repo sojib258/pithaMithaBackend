@@ -12,7 +12,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "description": {
+    "comment": {
       "type": "text",
       "required": true
     },
@@ -38,12 +38,9 @@
     },
     "users_permissions_user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "inversedBy": "rating"
-    },
-    "title": {
-      "type": "string"
+      "inversedBy": "ratings"
     }
   }
 }

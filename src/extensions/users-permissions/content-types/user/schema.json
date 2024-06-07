@@ -71,12 +71,6 @@
       "target": "api::blog.blog",
       "mappedBy": "users_permissions_user"
     },
-    "rating": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::rating.rating",
-      "mappedBy": "users_permissions_user"
-    },
     "products": {
       "type": "relation",
       "relation": "oneToMany",
@@ -84,11 +78,12 @@
       "mappedBy": "users_permissions_user"
     },
     "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "firstName": {
       "type": "string",
@@ -103,17 +98,26 @@
       "required": true,
       "min": "11"
     },
-    "address": {
+    "addresses": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::address.address",
       "mappedBy": "users_permissions_user"
     },
-    "cart": {
+    "orders": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::cart.cart",
+      "relation": "oneToMany",
+      "target": "api::order.order",
       "mappedBy": "users_permissions_user"
+    },
+    "ratings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::rating.rating",
+      "mappedBy": "users_permissions_user"
+    },
+    "averageResponseTime": {
+      "type": "integer"
     }
   }
 }
