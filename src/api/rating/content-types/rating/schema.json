@@ -28,7 +28,7 @@
       "max": 5,
       "min": 1
     },
-    "image": {
+    "images": {
       "type": "media",
       "multiple": true,
       "required": false,

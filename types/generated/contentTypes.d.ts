@@ -1043,6 +1043,7 @@ export interface ApiProductProduct extends Schema.CollectionType {
     averageRating: Attribute.Decimal;
     shortDescription: Attribute.String & Attribute.Required;
     completedDays: Attribute.String & Attribute.Required;
+    location: Attribute.String & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1088,7 +1089,7 @@ export interface ApiRatingRating extends Schema.CollectionType {
         },
         number
       >;
-    image: Attribute.Media;
+    images: Attribute.Media;
     users_permissions_user: Attribute.Relation<
       'api::rating.rating',
       'manyToOne',
