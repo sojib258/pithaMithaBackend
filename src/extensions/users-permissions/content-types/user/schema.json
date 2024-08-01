@@ -118,6 +118,18 @@
     },
     "averageResponseTime": {
       "type": "integer"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "users_permissions_user"
+    },
+    "reply_comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::reply-comment.reply-comment",
+      "mappedBy": "users_permissions_user"
     }
   }
 }

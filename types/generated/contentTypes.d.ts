@@ -811,6 +811,16 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'api::rating.rating'
     >;
     averageResponseTime: Attribute.Integer;
+    comments: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::comment.comment'
+    >;
+    reply_comments: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToMany',
+      'api::reply-comment.reply-comment'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<
@@ -903,6 +913,13 @@ export interface ApiBlogBlog extends Schema.CollectionType {
     >;
     featuredImage: Attribute.Media & Attribute.Required;
     description: Attribute.Blocks;
+    isFeatured: Attribute.Boolean & Attribute.DefaultTo<false>;
+    slug: Attribute.String & Attribute.Required & Attribute.Unique;
+    comments: Attribute.Relation<
+      'api::blog.blog',
+      'oneToMany',
+      'api::comment.comment'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -949,6 +966,51 @@ export interface ApiCategoryCategory extends Schema.CollectionType {
       Attribute.Private;
     updatedBy: Attribute.Relation<
       'api::category.category',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiCommentComment extends Schema.CollectionType {
+  collectionName: 'comments';
+  info: {
+    singularName: 'comment';
+    pluralName: 'comments';
+    displayName: 'Comment';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    comment: Attribute.Text & Attribute.Required;
+    users_permissions_user: Attribute.Relation<
+      'api::comment.comment',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    blog: Attribute.Relation<
+      'api::comment.comment',
+      'manyToOne',
+      'api::blog.blog'
+    >;
+    reply_comments: Attribute.Relation<
+      'api::comment.comment',
+      'oneToMany',
+      'api::reply-comment.reply-comment'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::comment.comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::comment.comment',
       'oneToOne',
       'admin::user'
     > &
@@ -1113,6 +1175,46 @@ export interface ApiRatingRating extends Schema.CollectionType {
   };
 }
 
+export interface ApiReplyCommentReplyComment extends Schema.CollectionType {
+  collectionName: 'reply_comments';
+  info: {
+    singularName: 'reply-comment';
+    pluralName: 'reply-comments';
+    displayName: 'Reply Comment';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    reply: Attribute.String & Attribute.Required;
+    users_permissions_user: Attribute.Relation<
+      'api::reply-comment.reply-comment',
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    comment: Attribute.Relation<
+      'api::reply-comment.reply-comment',
+      'manyToOne',
+      'api::comment.comment'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::reply-comment.reply-comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::reply-comment.reply-comment',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiTagTag extends Schema.CollectionType {
   collectionName: 'tags';
   info: {
@@ -1161,9 +1263,11 @@ declare module '@strapi/types' {
       'api::address.address': ApiAddressAddress;
       'api::blog.blog': ApiBlogBlog;
       'api::category.category': ApiCategoryCategory;
+      'api::comment.comment': ApiCommentComment;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::rating.rating': ApiRatingRating;
+      'api::reply-comment.reply-comment': ApiReplyCommentReplyComment;
       'api::tag.tag': ApiTagTag;
     }
   }

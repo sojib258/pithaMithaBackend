@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "reply_comments",
+  "info": {
+    "singularName": "reply-comment",
+    "pluralName": "reply-comments",
+    "displayName": "Reply Comment"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "reply": {
+      "type": "string",
+      "required": true
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "reply_comments"
+    },
+    "comment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::comment.comment",
+      "inversedBy": "reply_comments"
+    }
+  }
+}
