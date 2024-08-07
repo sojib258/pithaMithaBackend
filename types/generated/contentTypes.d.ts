@@ -920,6 +920,7 @@ export interface ApiBlogBlog extends Schema.CollectionType {
       'oneToMany',
       'api::comment.comment'
     >;
+    tags: Attribute.Relation<'api::blog.blog', 'oneToMany', 'api::tag.tag'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
@@ -1232,6 +1233,7 @@ export interface ApiTagTag extends Schema.CollectionType {
       'manyToMany',
       'api::product.product'
     >;
+    blog: Attribute.Relation<'api::tag.tag', 'manyToOne', 'api::blog.blog'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

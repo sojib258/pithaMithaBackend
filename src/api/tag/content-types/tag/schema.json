@@ -20,6 +20,12 @@
       "relation": "manyToMany",
       "target": "api::product.product",
       "inversedBy": "tags"
+    },
+    "blog": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::blog.blog",
+      "inversedBy": "tags"
     }
   }
 }
