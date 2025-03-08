@@ -79,6 +79,10 @@ module.exports = ({ env }) => {
         ),
       },
       useNullAsDefault: true,
+       pool: {
+      min: 2,
+      max: 10000, // Increase this value
+    },
     },
   };
 
